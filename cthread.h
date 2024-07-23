@@ -100,17 +100,19 @@ cthread*     cthread_alloc();
 
 /*   start: set thread exe func and start thread run
  *   td: thread pointer
- *   argv: struct pointer
  *   proc: func pointer  return >=0 thread circle; return < 0 thread once
+ *   argv: struct pointer
  *   return:  return code   0 - success,other - failed code
  */
 int         cthread_start(cthread* td, int (*proc)(void *argv), void *argv);
 
 /*   stop: stop thread exe func
  *   td: thread pointer
+ *   exit: wakeup exit circle func pointer
+ *   argv: struct pointer
  *   return:  return code   0 - success,other - failed code
  */
-int         cthread_stop(cthread* td);
+int         cthread_stop(cthread* td, int (*exit)(void *argv), void *argv);
 
 /*   free: free thread
  *   td: thread pointer

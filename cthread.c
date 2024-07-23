@@ -277,9 +277,11 @@ int         cthread_start(cthread* td, int (*proc)(void *argv), void *argv) {
 
 /*   stop: stop thread exe func
  *   td: thread pointer
+ *   exit: wakeup exit circle func pointer
+ *   argv: struct pointer
  *   return:  return code   0 - success,other - failed code
  */
-int         cthread_stop(cthread* td) {
+int         cthread_stop(cthread* td, int (*exit)(void *argv), void *argv) {
     int state = -1, stop = 0;
     if (td == NULL) {
         printf("error: stop td == NULL\n");
@@ -292,6 +294,9 @@ int         cthread_stop(cthread* td) {
     
     while((stop++) < 1000) {
         atomic_store(&(td->state), 1);
+        if (exit != NULL) {
+            exit(argv);
+        }
         usleep(1000);
         state= atomic_load(&(td->state));
         if (state == 0) {
